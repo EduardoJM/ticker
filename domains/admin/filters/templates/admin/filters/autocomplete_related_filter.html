@@ -1,0 +1,60 @@
+{% load i18n %}
+<style>
+    .filter-select-container {
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      padding: 0 15px;
+    }
+    .filter-select-container .select2 {
+      width: 100% !important;
+    }
+</style>
+<script>
+  function redirectFilterWithId(field, id) {
+    const search = new URLSearchParams(window.location.search);
+    if (!id) {
+      search.delete(field);
+    } else {
+      search.set(field, id);
+    }
+    
+    const url = '?' + search.toString();
+    if (url === '?') {
+      window.location = window.location.pathname
+      return;
+    }
+    window.location = url
+  }
+</script>
+<div class="list-filter-dropdown">
+    <h3 {% if spec.lookup_val or spec.value %}class="active"{% endif %}>{% blocktrans with title as filter_title %} By {{ filter_title }} {% endblocktrans %}</h3>
+    <div class="filter-select-container">
+        <select
+            onChange="redirectFilterWithId('{{spec.context.field_path}}', this.value)"
+            id="filter-{{ spec.context.field_name }}"
+            class="admin-autocompleterelated select2-hidden-accessible"
+            data-ajax--cache="true"
+            data-ajax--delay="250"
+            data-ajax--type="GET"
+            data-ajax--url="/admin/autocomplete/"
+            data-app-label="{{ spec.context.app_label }}"
+            data-model-name="{{ spec.context.model_name }}"
+            data-field-name="{{ spec.context.field_name }}"
+            data-theme="admin-autocomplete"
+            data-allow-clear="true"
+            data-placeholder=""
+            required=""
+            name="filter-{{ spec.context.field_name }}"
+            tabindex="-1"
+            aria-hidden="true"
+            data-select2-id="{{ spec.context.field_name }}"
+            data-dependencies="{{ spec.context.dependencies }}"
+            data-field-path="{{spec.context.field_path}}"
+        >
+            {% for choice in choices %}
+                <option {% if choice.selected %}selected{% endif %} value="{{ choice.query_string|iriencode }}">{{ choice.display }}</option>
+            {% endfor %}
+        </select>
+    </div>
+</div>
