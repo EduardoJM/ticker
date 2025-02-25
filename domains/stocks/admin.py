@@ -31,7 +31,7 @@ class TradingNoteAdmin(admin.ModelAdmin):
 
 @admin.register(StockTimeSeries)
 class StockTimeSeriesAdmin(AutocompleteRelatedFilterMixin, admin.ModelAdmin):
-    list_display = ['ticker', 'date', 'quantity', 'cumulated_quantity', 'buy_value', 'cumulated_buy_value', 'received_value', 'cumulated_received_value']
+    list_display = ['ticker', 'date', 'quantity', 'cumulated_quantity', 'buy_value', 'cumulated_buy_value', 'received_value', 'cumulated_received_value', 'average_cost']
     list_filter = [
         ('ticker', AutocompleteRelatedFilter),
     ]

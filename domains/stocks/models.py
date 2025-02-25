@@ -97,7 +97,16 @@ class StockTimeSeries(models.Model):
     cumulated_buy_value = models.DecimalField(_('cumulated buy value'), max_digits=12, decimal_places=2)
     received_value = models.DecimalField(_('received value'), max_digits=12, decimal_places=2)
     cumulated_received_value = models.DecimalField(_('cumulated received value'), max_digits=12, decimal_places=2)
-
+    average_cost = models.DecimalField(_('average cost'), max_digits=12, decimal_places=2)
+    
+    @property
+    def cumulated_adjusted_value(self):
+        return self.average_cost * self.cumulated_quantity
+    
+    @property
+    def cumulated_and_received_value(self):
+        return self.cumulated_adjusted_value + self.cumulated_received_value
+    
     class Meta:
         ordering = ['-date']
         verbose_name = _('stock time series')

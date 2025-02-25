@@ -14,6 +14,7 @@ def create_time_series(
     cumulated_quantity: int,
     cumulated_buy_value: Decimal,
     cumulated_received_value: Decimal,
+    current_price: Decimal,
 ):
     if isinstance(instance, TradingStock):
         date = instance.trading_note.trading_date
@@ -31,6 +32,7 @@ def create_time_series(
                 'cumulated_buy_value': new_buy_value,
                 'received_value': 0,
                 'cumulated_received_value': cumulated_received_value,
+                'average_cost': buy_value / quantity,
             }
         )
         return obj, new_quantity, new_buy_value, cumulated_received_value
@@ -47,6 +49,7 @@ def create_time_series(
             'cumulated_buy_value': cumulated_buy_value,
             'received_value': instance.net_value,
             'cumulated_received_value': new_received_value,
+            'average_cost': current_price,
         }
     )
     return obj, cumulated_quantity, cumulated_buy_value, new_received_value
@@ -63,6 +66,7 @@ def compute(ticker: Ticker):
     all_events = [*stocks, *events]
     all_events.sort(key=sort_events)
 
+    current_price = 0
     cumulated_quantity = 0
     cumulated_buy_value = Decimal(0)
     cumulated_received_value = Decimal(0)
@@ -74,8 +78,10 @@ def compute(ticker: Ticker):
             cumulated_quantity,
             cumulated_buy_value,
             cumulated_received_value,
+            current_price,
         )
         obj, cumulated_quantity, cumulated_buy_value, cumulated_received_value = result
+        current_price = obj.average_cost
         ids.append(obj.pk)
 
     today = timezone.now().date()
@@ -89,6 +95,7 @@ def compute(ticker: Ticker):
             cumulated_buy_value=cumulated_buy_value,
             received_value=0,
             cumulated_received_value=cumulated_received_value,
+            average_cost=10.10,
         )
         ids.append(obj.pk)
 
