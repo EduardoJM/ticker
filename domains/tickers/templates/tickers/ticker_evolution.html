@@ -12,6 +12,7 @@
   <span id="cumulated-adjusted" data-value='{{ cumulated_adjusted_value }}'></span>
   <span id="cumulated-received" data-value='{{ cumulated_received }}'></span>
   <span id="cumulated-adjusted-received" data-value='{{ cumulated_and_received_value }}'></span>
+  <span id="quantity" data-value='{{ quantity }}'></span>
 
   <script>
     const ctx = document.getElementById('myChart');
@@ -26,22 +27,32 @@
             data: JSON.parse(document.getElementById('cumulated-invest').getAttribute('data-value')),
             borderWidth: 2,
             cubicInterpolationMode: 'monotone',
+            helper_type: 'money',
           },
           {
             label: 'Valor Ajustado',
             data: JSON.parse(document.getElementById('cumulated-adjusted').getAttribute('data-value')),
             borderWidth: 2,
             cubicInterpolationMode: 'monotone',
+            helper_type: 'money',
           },
           {
             label: 'Proventos Recebidos',
             data: JSON.parse(document.getElementById('cumulated-received').getAttribute('data-value')),
             borderWidth: 2,
             cubicInterpolationMode: 'monotone',
+            helper_type: 'money',
           },
           {
             label: 'Valor Ajustado + Proventos Recebidos',
             data: JSON.parse(document.getElementById('cumulated-adjusted-received').getAttribute('data-value')),
+            borderWidth: 2,
+            cubicInterpolationMode: 'monotone',
+            helper_type: 'money',
+          },
+          {
+            label: 'Quantidade',
+            data: JSON.parse(document.getElementById('quantity').getAttribute('data-value')),
             borderWidth: 2,
             cubicInterpolationMode: 'monotone',
           }
@@ -52,7 +63,19 @@
           y: {
             beginAtZero: true
           }
-        }
+        },
+        plugins: {
+          tooltip: {
+            callbacks: {
+              label: function(context) {
+                if (context.dataset.helper_type === 'money') {
+                  return context.dataset.label + ': R$ ' + context.raw.toFixed(2).replace('.', ',');
+                }
+                return context.dataset.label + ': ' + context.raw.toString();
+              },
+            },
+          },
+        },
       }
     });
   </script>

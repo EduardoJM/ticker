@@ -18,11 +18,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    
+    # background jobs
+    'procrastinate.contrib.django',
+    # health check
     "core.health_check",
-
+    # admin extensions
     'domains.admin.filters',
-
+    # domains
     'domains.tickers',
     'domains.payment_events',
     'domains.stocks',

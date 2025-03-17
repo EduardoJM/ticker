@@ -21,6 +21,12 @@ class TradingStockInlineAdmin(admin.StackedInline):
     autocomplete_fields = ['ticker']
     extra = 0
 
+@admin.register(TradingStock)
+class TradingStockAdmin(admin.ModelAdmin):
+    list_display = ['id', 'trading_note', 'ticker', 'trading_type', 'quantity', 'unit_price']
+    list_display_links = ['id', 'trading_note', 'ticker', 'trading_type', 'quantity', 'unit_price']
+    search_fields = ['ticker__code']
+
 @admin.register(TradingNote)
 class TradingNoteAdmin(admin.ModelAdmin):
     list_display = ['id', 'number', 'liquidation_date', 'net_value']

@@ -83,7 +83,7 @@ class PaymentEventAdmin(AutocompleteRelatedFilterMixin, admin.ModelAdmin):
             unit_price = float(str(price_cell.value))
             net_value = float(str(net_cell.value))
 
-            ticker_instance, _ = Ticker.objects.get_or_create(code=ticker)
+            ticker_instance, _ = Ticker.objects.get_or_create_updated(ticker)
             PaymentEvent.objects.update_or_create(
                 ticker=ticker_instance,
                 event_type=payment_type,
